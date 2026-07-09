@@ -1,0 +1,1 @@
+export const PHOTOS_PER_CATEGORY_PAGE = 6;

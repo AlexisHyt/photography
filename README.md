@@ -1,36 +1,61 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Alexis Hayat Photography Gallery
 
-## Getting Started
+This project is a Next.js App Router gallery website for a photographer.
 
-First, run the development server:
+## Folder convention
+
+The app reads photos from `public/gallery`.
+
+- Any subfolder in `public/gallery` is treated as a category.
+- Example: `public/gallery/Star Trail` creates category `Star Trail`.
+- Supported image extensions: `.jpg`, `.jpeg`, `.png`, `.webp`, `.avif`, `.gif`.
+
+Example tree:
+
+```text
+public/
+  gallery/
+	Star Trail/
+	  image-001.jpg
+	  image-002.jpg
+	Portraits/
+	  portrait-a.webp
+```
+
+## Sorting and pagination
+
+- Photos are sorted by file modification date (`mtime`) descending.
+- Latest added or modified files appear first.
+- Pagination is local to each category with `6` photos per page.
+- Each category page shows `2` rows of `3` photos.
+- Pagination state is local in the UI (no URL query or dedicated route).
+
+## Zoom
+
+- Click any photo to open a full-screen lightbox.
+- Lightbox uses `yet-another-react-lightbox` with `Zoom` plugin.
+- Zoom supports wheel, pinch, drag, keyboard navigation, and double-click steps.
+
+## Category sections and side navigation
+
+- Category sections are always open.
+- A sticky side navigation links to category anchors on the current page.
+- Clicking a category scrolls smoothly to that section.
+
+## Development
+
+Run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open `http://localhost:3000`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Quality checks
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Run lint checks:
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+npm run lint
+```
