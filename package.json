@@ -7,16 +7,26 @@
     "build": "next build",
     "start": "next start",
     "lint": "biome check",
-    "format": "biome format --write"
+    "format": "biome format --write",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "admin:create": "node ./scripts/create-admin-user.mjs"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.600.0",
+    "@aws-sdk/s3-request-presigner": "^3.1110.0",
+    "@paralleldrive/cuid2": "^3.3.0",
     "@tsparticles/engine": "^4.3.1",
     "@tsparticles/preset-ambient": "^4.3.1",
     "@tsparticles/preset-fire": "^4.3.1",
     "@tsparticles/preset-links": "^4.3.1",
     "@tsparticles/preset-stars": "^4.3.1",
     "@tsparticles/react": "^4.3.1",
+    "better-auth": "^1.6.28",
+    "dotenv": "^17.4.2",
+    "drizzle-orm": "^1.0.0-rc.4",
     "next": "16.2.10",
+    "pg": "^8.23.0",
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "yet-another-react-lightbox": "^3.32.1"
@@ -27,6 +37,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "drizzle-kit": "^1.0.0-rc.4",
     "tailwindcss": "^4",
     "typescript": "^5"
   },

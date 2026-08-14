@@ -14,8 +14,12 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Alexis Hayat - Photography Gallery",
-  description: "Photography gallery sorted by latest uploads and categories.",
+  title: {
+    default: "Alexis Hayat Photography",
+    template: "%s — Alexis Hayat Photography",
+  },
+  description:
+    "A photography portfolio with elegant category pages, full-screen lightbox viewing, and curated collections.",
 };
 
 export default function RootLayout({

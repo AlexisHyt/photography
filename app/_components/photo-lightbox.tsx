@@ -1,8 +1,10 @@
 "use client";
 
 import Lightbox, { type Slide } from "yet-another-react-lightbox";
+import Captions from "yet-another-react-lightbox/plugins/captions";
 import Zoom from "yet-another-react-lightbox/plugins/zoom";
 import "yet-another-react-lightbox/styles.css";
+import "yet-another-react-lightbox/plugins/captions.css";
 
 type PhotoLightboxProps = {
   slides: Slide[];
@@ -21,7 +23,7 @@ export function PhotoLightbox({
       close={onClose}
       index={openIndex ?? 0}
       slides={slides}
-      plugins={[Zoom]}
+      plugins={[Captions, Zoom]}
       styles={{
         root: { zIndex: "9999" },
       }}
