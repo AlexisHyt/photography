@@ -124,3 +124,21 @@ export async function objectExists(storageKey: string): Promise<boolean> {
     return false;
   }
 }
+
+export async function getMinioObjectBuffer(storageKey: string): Promise<Buffer> {
+  const config = getMinioConfig();
+  const client = getMinioClient();
+
+  const response = await client.send(
+    new GetObjectCommand({
+      Bucket: config.bucket,
+      Key: storageKey,
+    }),
+  );
+
+  if (!response.Body) {
+    throw new Error(`Object ${storageKey} has no body.`);
+  }
+
+  return Buffer.from(await response.Body.transformToByteArray());
+}

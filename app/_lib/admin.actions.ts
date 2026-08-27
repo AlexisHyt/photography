@@ -3,6 +3,8 @@
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { after } from "next/server";
+import { sendNewPhotosNotification } from "@/app/_lib/email/notifications";
 import { ADMIN_PAGE_PATH } from "@/app/_lib/admin.constants";
 import type { AdminFormState } from "@/app/_lib/admin.form-state";
 import { hasAdminSession } from "@/app/_lib/admin-auth";
@@ -67,6 +69,23 @@ export async function uploadPhotosAction(
     });
 
     revalidateGalleryViews([result.category]);
+
+    // Announcing the upload must not hold up the admin's response, and a mail
+    // provider outage must not turn a successful upload into a failed one.
+    after(async () => {
+      try {
+        await sendNewPhotosNotification({
+          categoryName: result.category,
+          categorySlug: result.categorySlug,
+          photos: result.uploaded.map((photo) => ({
+            id: photo.id,
+            alt: `${result.category} — ${photo.fileName}`,
+          })),
+        });
+      } catch (error) {
+        console.error("[upload] Could not announce the new photos", error);
+      }
+    });
 
     return {
       status: "success",

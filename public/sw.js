@@ -1,5 +1,5 @@
 // Bump the version to invalidate every cache this worker owns.
-const VERSION = "v1";
+const VERSION = "v2";
 const SHELL_CACHE = `shell-${VERSION}`;
 const ASSET_CACHE = `assets-${VERSION}`;
 
@@ -19,6 +19,15 @@ const SHELL_ASSETS = [
 const BYPASS = [/^\/api\//, /^\/studio-console/, /^\/_next\/image/];
 
 const CACHEABLE_ASSET = /\.(?:css|js|woff2?|svg|png|ico|webmanifest)$/;
+
+// Build output is content hashed in production but NOT in development, where
+// Turbopack reuses the same chunk URL as a file changes. A production build
+// tested on localhost leaves this worker registered on the very origin the dev
+// server then uses, so caching build output here would serve a stale bundle for
+// as long as the registration lives.
+const IS_LOCAL =
+  self.location.hostname === "localhost" ||
+  self.location.hostname === "127.0.0.1";
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
@@ -117,7 +126,9 @@ self.addEventListener("fetch", (event) => {
   }
 
   if (url.pathname.startsWith("/_next/static/")) {
-    event.respondWith(cacheFirst(request));
+    if (!IS_LOCAL) {
+      event.respondWith(cacheFirst(request));
+    }
     return;
   }
 

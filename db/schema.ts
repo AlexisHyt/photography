@@ -49,6 +49,24 @@ export const photos = pgTable("photos", {
     .notNull(),
 });
 
+export const subscribers = pgTable("subscribers", {
+  id: text("id")
+    .$defaultFn(() => createId())
+    .primaryKey(),
+  email: text("email").notNull().unique(),
+  // Per-recipient secret used to build the unsubscribe link, so a link taken
+  // from one email can never remove somebody else's address.
+  unsubscribeToken: text("unsubscribe_token")
+    .$defaultFn(() => createId())
+    .notNull()
+    .unique(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at")
+    .defaultNow()
+    .$onUpdate(() => new Date())
+    .notNull(),
+});
+
 export const user = pgTable("user", {
   id: text("id")
     .$defaultFn(() => createId())

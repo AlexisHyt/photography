@@ -339,11 +339,21 @@ export async function getGalleryCategoryBySlug(
   };
 }
 
+export type UploadedGalleryPhoto = {
+  id: string;
+  fileName: string;
+};
+
 export async function uploadGalleryPhotos(
   categoryName: string,
   files: File[],
   metadata?: Partial<PhotoMetadata> | null,
-): Promise<{ category: string; fileNames: string[] }> {
+): Promise<{
+  category: string;
+  categorySlug: string;
+  fileNames: string[];
+  uploaded: UploadedGalleryPhoto[];
+}> {
   const validFiles = files.filter((file) => file.size > 0);
 
   if (validFiles.length === 0) {
@@ -351,7 +361,7 @@ export async function uploadGalleryPhotos(
   }
 
   const category = await getOrCreateCategory(categoryName);
-  const uploadedFileNames: string[] = [];
+  const uploaded: UploadedGalleryPhoto[] = [];
 
   for (const file of validFiles) {
     const sanitizedFileName = sanitizeFileName(file.name);
@@ -363,7 +373,9 @@ export async function uploadGalleryPhotos(
     const publicUrl = await uploadToMinio(storageKey, buffer, contentType);
 
     // Store in DB
-    await db.insert(photos).values({
+    const [inserted] = await db
+      .insert(photos)
+      .values({
       categoryId: category.id,
       storageKey,
       publicUrl,
@@ -373,15 +385,20 @@ export async function uploadGalleryPhotos(
       aperture: metadata?.aperture?.trim() || null,
       exposureTime: metadata?.exposureTime?.trim() || null,
       focalLength: metadata?.focalLength?.trim() || null,
-      cameraModel: metadata?.cameraModel?.trim() || null,
-    });
+        cameraModel: metadata?.cameraModel?.trim() || null,
+      })
+      .returning({ id: photos.id });
 
-    uploadedFileNames.push(sanitizedFileName);
+    if (inserted) {
+      uploaded.push({ id: inserted.id, fileName: sanitizedFileName });
+    }
   }
 
   return {
     category: category.name,
-    fileNames: uploadedFileNames,
+    categorySlug: category.slug,
+    fileNames: uploaded.map((photo) => photo.fileName),
+    uploaded,
   };
 }
 

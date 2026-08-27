@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Background } from "@/app/_components/Background";
 import { ServiceWorkerRegister } from "@/app/_components/service-worker-register";
+import { SubscribeButton } from "@/app/_components/subscribe-button";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -60,6 +61,7 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col">
         <Background />
         <div className="relative z-10">{children}</div>
+        <SubscribeButton />
         <ServiceWorkerRegister />
       </body>
     </html>
