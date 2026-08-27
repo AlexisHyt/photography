@@ -24,7 +24,7 @@ const CONTENT_WIDTH = 560;
 const MAX_PREVIEWS = 3;
 
 const PLATE = "#161320";
-const ACCENT = "#FFC24B";
+const ACCENT = "#FFFFFF";
 
 function escapeHtml(value: string): string {
   return value

@@ -44,7 +44,7 @@ export function SubscribeButton() {
         type="button"
         onClick={() => dialogRef.current?.showModal()}
         aria-label="Get notified about new photographs"
-        className="fixed bottom-5 right-5 z-50 flex h-14 w-14 items-center justify-center rounded-full border border-white/10 bg-zinc-950 text-amber-300 shadow-[0_10px_40px_rgba(0,0,0,0.45)] transition hover:scale-105 hover:bg-zinc-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-300 sm:bottom-6 sm:right-6"
+        className="fixed bottom-5 right-5 z-50 flex h-14 w-14 items-center justify-center rounded-full border border-white/10 bg-zinc-950 text-white shadow-[0_10px_40px_rgba(0,0,0,0.45)] transition hover:scale-105 hover:bg-zinc-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-300 sm:bottom-6 sm:right-6"
       >
         <BellIcon />
       </button>
