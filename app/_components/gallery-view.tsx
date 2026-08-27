@@ -33,9 +33,12 @@ export function GalleryView({
           <div className="relative grid gap-10 p-8 lg:grid-cols-[1.05fr_0.95fr] lg:p-12">
             <div className="flex flex-col justify-between gap-8">
               <div className="space-y-6">
-                <p className="text-xs uppercase tracking-[0.4em] text-white/55">
-                  Photography portfolio
-                </p>
+                <div className="flex items-center gap-2">
+                  <Image src={"icon.svg"} alt={"Logo"} width="40" height="40" />
+                  <p className="text-xs uppercase tracking-[0.4em] text-white/55">
+                    Photography portfolio
+                  </p>
+                </div>
                 <div className="space-y-4">
                   <h1 className="max-w-2xl text-4xl font-semibold leading-tight sm:text-5xl xl:text-6xl">
                     {photographerName}

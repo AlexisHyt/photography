@@ -5,7 +5,7 @@ import { getGalleryData, groupPhotosByCategory } from "@/app/_lib/gallery";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Portfolio",
+  title: "Alexis Hayat - Photography Portfolio",
   description:
     "A photography portfolio with dedicated category pages, elegant cards, and full-screen lightbox viewing.",
 };
