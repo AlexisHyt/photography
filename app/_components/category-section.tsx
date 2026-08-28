@@ -1,11 +1,15 @@
 "use client";
 
 import Image from "next/image";
-import { useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { Slide } from "yet-another-react-lightbox";
 import { PhotoLightbox } from "@/app/_components/photo-lightbox";
 import type { GalleryCategoryGroup, GalleryPhoto } from "@/app/_lib/gallery";
-import { PHOTOS_PER_CATEGORY_PAGE } from "@/app/_lib/gallery.constants";
+import {
+  LIGHTBOX_PHOTO_PARAM,
+  PHOTOS_PER_CATEGORY_PAGE,
+} from "@/app/_lib/gallery.constants";
 
 function formatCameraSettings(photo: GalleryPhoto): string | undefined {
   const parts: string[] = [];
@@ -22,9 +26,66 @@ type CategorySectionProps = {
 };
 
 export function CategorySection({ group }: CategorySectionProps) {
+  const searchParams = useSearchParams();
   const [currentPage, setCurrentPage] = useState(1);
-  const [openIndex, setOpenIndex] = useState<number | null>(null);
   const hasPhotos = group.photos.length > 0;
+
+  // The open slide lives in the URL rather than in local state, so the address
+  // bar always describes what is on screen and a shared link restores it.
+  const photoId = searchParams.get(LIGHTBOX_PHOTO_PARAM);
+  const openIndex = useMemo(() => {
+    if (!photoId) {
+      return null;
+    }
+
+    const index = group.photos.findIndex((photo) => photo.dbId === photoId);
+    return index === -1 ? null : index;
+  }, [group.photos, photoId]);
+
+  // Opening from the grid adds a history entry so the back button (or a mobile
+  // back gesture) closes the lightbox instead of leaving the page. Links opened
+  // straight onto a photo have no such entry to step back to.
+  const hasHistoryEntry = useRef(false);
+
+  const writePhotoId = useCallback(
+    (nextPhotoId: string | null, mode: "push" | "replace") => {
+      const params = new URLSearchParams(window.location.search);
+
+      if (nextPhotoId) {
+        params.set(LIGHTBOX_PHOTO_PARAM, nextPhotoId);
+      } else {
+        params.delete(LIGHTBOX_PHOTO_PARAM);
+      }
+
+      const query = params.toString();
+      const url = `${window.location.pathname}${query ? `?${query}` : ""}`;
+
+      if (mode === "push") {
+        window.history.pushState(null, "", url);
+      } else {
+        window.history.replaceState(null, "", url);
+      }
+    },
+    [],
+  );
+
+  // An unknown id — a deleted photo, or one belonging to another collection —
+  // is dropped from the URL and the plain category page is shown instead.
+  useEffect(() => {
+    if (photoId && openIndex === null) {
+      writePhotoId(null, "replace");
+    }
+  }, [openIndex, photoId, writePhotoId]);
+
+  // Keep the grid on the page holding the open photo, so a shared link lands on
+  // the right page and closing the lightbox reveals the photo in place.
+  useEffect(() => {
+    if (openIndex === null) {
+      return;
+    }
+
+    setCurrentPage(Math.floor(openIndex / PHOTOS_PER_CATEGORY_PAGE) + 1);
+  }, [openIndex]);
 
   const totalPages = Math.max(
     1,
@@ -49,7 +110,36 @@ export function CategorySection({ group }: CategorySectionProps) {
   );
 
   function handleOpen(localIndex: number) {
-    setOpenIndex(startIndex + localIndex);
+    const photo = pagePhotos[localIndex];
+
+    if (!photo) {
+      return;
+    }
+
+    hasHistoryEntry.current = true;
+    writePhotoId(photo.dbId, "push");
+  }
+
+  // Moving to another slide rewrites the current entry instead of stacking a
+  // new one, so browsing a collection does not flood the history stack.
+  function handleView(index: number) {
+    const photo = group.photos[index];
+
+    if (!photo || photo.dbId === photoId) {
+      return;
+    }
+
+    writePhotoId(photo.dbId, "replace");
+  }
+
+  function handleClose() {
+    if (hasHistoryEntry.current) {
+      hasHistoryEntry.current = false;
+      window.history.back();
+      return;
+    }
+
+    writePhotoId(null, "replace");
   }
 
   return (
@@ -138,7 +228,8 @@ export function CategorySection({ group }: CategorySectionProps) {
       <PhotoLightbox
         slides={slides}
         openIndex={openIndex}
-        onClose={() => setOpenIndex(null)}
+        onView={handleView}
+        onClose={handleClose}
       />
     </section>
   );
