@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import { AdminLoginForm } from "@/app/_components/admin-login-form";
 import { AdminSubmitButton } from "@/app/_components/admin-submit-button";
 import { AdminUploadForm } from "@/app/_components/admin-upload-form";
+import { GalleryImage } from "@/app/_components/gallery-image";
 import {
   deletePhotoAction,
   logoutAdminAction,
@@ -159,7 +159,7 @@ export default async function StudioConsolePage() {
                     className="overflow-hidden rounded-3xl border border-zinc-200 bg-white/90 shadow-xl backdrop-blur dark:border-zinc-800 dark:bg-zinc-950/85"
                   >
                     <div className="relative aspect-4/3 bg-zinc-100 dark:bg-zinc-900">
-                      <Image
+                      <GalleryImage
                         src={photo.src}
                         alt={photo.fileName}
                         fill

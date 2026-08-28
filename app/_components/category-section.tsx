@@ -1,9 +1,9 @@
 "use client";
 
-import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { Slide } from "yet-another-react-lightbox";
+import { GalleryImage } from "@/app/_components/gallery-image";
 import { PhotoLightbox } from "@/app/_components/photo-lightbox";
 import type { GalleryCategoryGroup, GalleryPhoto } from "@/app/_lib/gallery";
 import {
@@ -177,7 +177,7 @@ export function CategorySection({ group }: CategorySectionProps) {
                 onClick={() => handleOpen(index)}
               >
                 <div className="relative aspect-[4/3]">
-                  <Image
+                  <GalleryImage
                     src={photo.src}
                     alt={`${group.category} - ${photo.fileName}`}
                     fill

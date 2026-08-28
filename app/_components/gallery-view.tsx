@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { GalleryImage } from "@/app/_components/gallery-image";
 import type { GalleryCategoryGroup } from "@/app/_lib/gallery";
 
 type GalleryViewProps = {
@@ -85,7 +86,7 @@ export function GalleryView({
                     key={tile.photo.id}
                     className={`${tile.className} relative overflow-hidden rounded-3xl border border-white/10 bg-white/5`}
                   >
-                    <Image
+                    <GalleryImage
                       src={tile.photo.src}
                       alt={`${tile.photo.category} - ${tile.photo.fileName}`}
                       fill
@@ -154,7 +155,7 @@ export function GalleryView({
                     className={`${isLarge ? "aspect-[16/9]" : "aspect-[4/5]"} relative`}
                   >
                     {cover ? (
-                      <Image
+                      <GalleryImage
                         src={cover.src}
                         alt={`${group.category} - ${cover.fileName}`}
                         fill

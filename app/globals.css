@@ -12,6 +12,20 @@
   --font-mono: var(--font-geist-mono);
 }
 
+@theme {
+  /* Sweep used by the skeleton that stands in for a photo while it downloads. */
+  --animate-shimmer: shimmer 1.6s linear infinite;
+
+  @keyframes shimmer {
+    from {
+      transform: translateX(-100%);
+    }
+    to {
+      transform: translateX(100%);
+    }
+  }
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
