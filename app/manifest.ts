@@ -4,7 +4,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     id: "/",
     name: "Alexis Hayat Photography",
-    short_name: "A. Hayat",
+    short_name: "A. Hayat - Photos",
     description:
       "A photography portfolio with elegant category pages, full-screen lightbox viewing, and curated collections.",
     start_url: "/",
