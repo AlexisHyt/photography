@@ -49,6 +49,7 @@ export function SubscribeButton() {
         <BellIcon />
       </button>
 
+      {/** biome-ignore lint/a11y/useKeyWithClickEvents: no click */}
       <dialog
         ref={dialogRef}
         // The native dialog already handles Escape and focus trapping; this
@@ -122,7 +123,6 @@ export function SubscribeButton() {
 
             {state.message ? (
               <p
-                role="status"
                 className={`text-sm leading-6 ${
                   state.status === "error"
                     ? "text-red-600 dark:text-red-400"
